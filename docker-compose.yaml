@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  diceroll-api:
+    build: .
+    ports:
+      - '8080:8080'
+    volumes:
+      - type: bind
+        source: ./
+        target: /app/
+        consistency: delegated
+    env_file: ./.env
+    networks:
+      - diceroll-network
+
+  mongodb:
+    image: mongo:5.0
+    container_name: mongodb
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - diceroll-network
+
+  nats-server:
+    image: nats
+    ports:
+      - '4222:4222'
+      - '6222:6222'
+      - '8222:8222'
+    networks:
+      - diceroll-network
+
+volumes:
+  mongo-data:
+
+networks:
+  diceroll-network:
+    name: diceroll-network
+    driver: bridge
+    external: true
