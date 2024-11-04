@@ -1,11 +1,14 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { UserService } from './use-case/user.service';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { UserService } from './user.service';
 import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'core/guards/jwt-auth.guard';
+import { CurrentUser } from 'core/decorators/current-user.decorator';
+import { GoogleUser } from 'core/strategies/google.strategy';
 
 @ApiTags('user')
 @ApiBearerAuth()
@@ -14,9 +17,10 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  @ApiOperation({ description: 'test' })
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ description: 'user' })
   @ApiOkResponse()
-  public getUser(@Query('user_id') user_id: string) {
-    return this.userService.getUser(user_id);
+  public getUser(@CurrentUser() user: GoogleUser) {
+    return this.userService.getUserByEmail(user.email);
   }
 }

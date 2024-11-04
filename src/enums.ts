@@ -5,4 +5,5 @@ export enum Environment {
 
 export enum Database {
   USERS = 'users',
+  STORY = 'story',
 }

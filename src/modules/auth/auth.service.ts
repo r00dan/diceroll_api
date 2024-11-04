@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { TokenService } from './token.service';
-import { UserService } from 'modules/user/use-case/user.service';
-import { GoogleUser } from './google.strategy';
+import { UserService } from 'modules/user/user.service';
+import { GoogleUser } from '../../core/strategies/google.strategy';
 
 @Injectable()
 export class AuthService {
@@ -32,5 +32,27 @@ export class AuthService {
       access: await this.tokenService.signAccessToken(candidate.id),
       refresh: await this.tokenService.signRefreshToken(candidate.id),
     };
+  }
+
+  public async refreshTokens(refreshToken: string) {
+    if (!refreshToken) {
+      throw new UnauthorizedException();
+    }
+
+    const validationResult =
+      await this.tokenService.verifyRefreshToken(refreshToken);
+
+    if (validationResult instanceof UnauthorizedException) {
+      throw new UnauthorizedException();
+    }
+
+    const newAccessToken = await this.tokenService.signAccessToken(
+      validationResult.user_id,
+    );
+    const newRefreshToken = await this.tokenService.signRefreshToken(
+      validationResult.user_id,
+    );
+
+    return [newAccessToken, newRefreshToken];
   }
 }

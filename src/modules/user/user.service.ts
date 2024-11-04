@@ -3,8 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { nanoid } from 'nanoid';
 import { Model } from 'mongoose';
 
-import { CreateUserDto } from '../dto/create-user.dto';
-import { UserDocument, User } from '../infra/user.schema';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UserDocument, User } from './user.schema';
 
 @Injectable()
 export class UserService {
