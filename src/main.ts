@@ -34,7 +34,7 @@ async function bootstrap() {
 
   app.enableShutdownHooks();
   app.enableCors({
-    origin: '*',
+    origin: 'http://localhost:3000',
     methods: 'GET,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 204,

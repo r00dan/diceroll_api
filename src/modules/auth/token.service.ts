@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 
 export interface JwtPayload {
   user_id?: string;
+  session_id?: string;
   iat: number;
   exp: number;
 }
